@@ -94,7 +94,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center;
+      object-position: right center;
       display: block;
     }
 
@@ -146,7 +146,7 @@
       font-weight: 800;
       font-style: italic;
       line-height: 0.95;
-      color: var(--white);
+      color: var(--yellow);
       letter-spacing: -0.03em;
       margin-bottom: 32px;
       opacity: 0;
@@ -155,12 +155,13 @@
 
     .hero-title span {
       display: block;
-      color: var(--green);
+      color: var(--white);
       font-weight: 300;
       font-style: normal;
       font-size: 0.55em;
       letter-spacing: 0.05em;
       font-optical-sizing: auto;
+      opacity: 0.5;
     }
 
     .hero-sub {
@@ -246,7 +247,7 @@
     .heading em {
       font-style: italic;
       font-weight: 300;
-      color: var(--green);
+      color: var(--yellow);
     }
 
     .body-text {
@@ -265,7 +266,7 @@
       font-weight: 300;
       font-style: italic;
       line-height: 1.4;
-      color: var(--white);
+      color: var(--yellow);
       max-width: 420px;
       margin-bottom: 32px;
       opacity: 0.92;
@@ -303,7 +304,7 @@
       font-family: 'Fraunces', serif;
       font-size: clamp(20px, 2.2vw, 28px);
       font-weight: 500;
-      color: var(--white);
+      color: var(--yellow);
       text-align: right;
     }
 
@@ -337,7 +338,7 @@
       font-family: 'Fraunces', serif;
       font-size: 20px;
       font-style: italic;
-      color: var(--green);
+      color: var(--yellow);
       opacity: 0.8;
     }
 
@@ -639,15 +640,22 @@
     });
 
     let ticking = false;
+    let scrubDone = false;
+
     window.addEventListener('scroll', () => {
+      if (scrubDone || !ticking === false) return;
       if (!ticking) {
         requestAnimationFrame(() => {
-          if (duration) {
+          if (duration && !scrubDone) {
             const details = document.getElementById('details');
-            // scrub zone: from top of page to bottom of #details section
             const scrubEnd = details.offsetTop + details.offsetHeight;
-            const progress = Math.min(window.scrollY / scrubEnd, 1);
-            video.currentTime = progress * duration;
+            const progress = window.scrollY / scrubEnd;
+            if (progress >= 1) {
+              video.currentTime = duration;
+              scrubDone = true;
+            } else {
+              video.currentTime = Math.max(0, progress) * duration;
+            }
           }
           ticking = false;
         });
