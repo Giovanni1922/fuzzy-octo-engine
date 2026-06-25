@@ -12,8 +12,9 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --ember:   #D4603A;
-      --ember2:  #E8845C;
+      --yellow:  #FFD092;
+      --green:   #3E7A3F;
+      --green2:  #4e9a50;
       --white:   #F8F4EE;
       --dim:     rgba(248, 244, 238, 0.42);
       --dimmer:  rgba(248, 244, 238, 0.22);
@@ -38,7 +39,7 @@
       position: fixed;
       width: 8px; height: 8px;
       border-radius: 50%;
-      background: var(--ember);
+      background: var(--green);
       pointer-events: none;
       z-index: 9999;
       transform: translate(-50%, -50%);
@@ -50,7 +51,7 @@
       position: fixed;
       width: 38px; height: 38px;
       border-radius: 50%;
-      border: 1px solid rgba(212, 96, 58, 0.6);
+      border: 1px solid rgba(62, 122, 63, 0.6);
       pointer-events: none;
       z-index: 9998;
       transform: translate(-50%, -50%);
@@ -62,14 +63,14 @@
 
     body.hovering #cur-dot {
       width: 12px; height: 12px;
-      background: var(--ember2);
-      box-shadow: 0 0 18px 4px rgba(212,96,58,0.5);
+      background: var(--yellow);
+      box-shadow: 0 0 18px 4px rgba(62,122,63,0.5);
     }
 
     body.hovering #cur-ring {
       width: 58px; height: 58px;
-      border-color: rgba(212,96,58,0.9);
-      box-shadow: 0 0 24px 2px rgba(212,96,58,0.2);
+      border-color: rgba(62,122,63,0.9);
+      box-shadow: 0 0 24px 2px rgba(62,122,63,0.2);
     }
 
     /* ── LAYOUT ────────────────────────────────────────────── */
@@ -133,7 +134,7 @@
       font-weight: 300;
       letter-spacing: 0.4em;
       text-transform: uppercase;
-      color: var(--ember);
+      color: var(--green);
       margin-bottom: 56px;
       opacity: 0;
       animation: rise 1.2s ease 0.4s forwards;
@@ -154,7 +155,7 @@
 
     .hero-title span {
       display: block;
-      color: var(--ember);
+      color: var(--green);
       font-weight: 300;
       font-style: normal;
       font-size: 0.55em;
@@ -185,7 +186,7 @@
     .hero-scroll-line {
       width: 48px;
       height: 1px;
-      background: var(--ember);
+      background: var(--green);
       transform-origin: left;
       animation: lineGrow 1.2s ease 2s both;
     }
@@ -199,7 +200,7 @@
       font-size: 10px;
       letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: var(--ember);
+      color: var(--green);
       opacity: 0.7;
     }
 
@@ -212,7 +213,7 @@
     .divider {
       margin: 0 72px;
       height: 1px;
-      background: linear-gradient(to right, var(--ember), transparent);
+      background: linear-gradient(to right, var(--green), transparent);
       opacity: 0.25;
     }
 
@@ -227,7 +228,7 @@
       font-weight: 400;
       letter-spacing: 0.4em;
       text-transform: uppercase;
-      color: var(--ember);
+      color: var(--green);
       opacity: 0.75;
       margin-bottom: 28px;
     }
@@ -245,7 +246,7 @@
     .heading em {
       font-style: italic;
       font-weight: 300;
-      color: var(--ember);
+      color: var(--green);
     }
 
     .body-text {
@@ -329,14 +330,14 @@
     #founder .founder-text strong {
       font-style: normal;
       font-weight: 600;
-      color: var(--ember2);
+      color: var(--yellow);
     }
 
     .founder-sig {
       font-family: 'Fraunces', serif;
       font-size: 20px;
       font-style: italic;
-      color: var(--ember);
+      color: var(--green);
       opacity: 0.8;
     }
 
@@ -349,8 +350,8 @@
       display: inline-block;
       padding: 20px 56px;
       background: transparent;
-      border: 1px solid rgba(212,96,58,0.55);
-      color: var(--ember2);
+      border: 1px solid rgba(62,122,63,0.55);
+      color: var(--yellow);
       font-family: 'Outfit', sans-serif;
       font-size: 12px;
       font-weight: 400;
@@ -366,7 +367,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: var(--ember);
+      background: var(--yellow);
       transform: translateX(-101%);
       transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
       z-index: -1;
@@ -374,7 +375,7 @@
 
     .btn-buy:hover {
       color: var(--black);
-      border-color: var(--ember);
+      border-color: var(--yellow);
     }
 
     .btn-buy:hover::after {
@@ -633,7 +634,6 @@
       video.currentTime = 0;
     });
 
-    // also try once canplay fires
     video.addEventListener('canplay', () => {
       if (!duration) duration = video.duration;
     });
@@ -643,9 +643,10 @@
       if (!ticking) {
         requestAnimationFrame(() => {
           if (duration) {
-            const scrolled = window.scrollY;
-            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = Math.min(scrolled / maxScroll, 1);
+            const details = document.getElementById('details');
+            // scrub zone: from top of page to bottom of #details section
+            const scrubEnd = details.offsetTop + details.offsetHeight;
+            const progress = Math.min(window.scrollY / scrubEnd, 1);
             video.currentTime = progress * duration;
           }
           ticking = false;
@@ -669,7 +670,7 @@
     /* ── AMBIENT GLOW ON CURSOR NEAR EMBER ELEMENTS ──────── */
     // subtle: ember glow pulses on the dot every few seconds
     setInterval(() => {
-      dot.style.boxShadow = `0 0 ${8 + Math.random()*8}px ${2+Math.random()*4}px rgba(212,96,58,${0.3+Math.random()*0.3})`;
+      dot.style.boxShadow = `0 0 ${8 + Math.random()*8}px ${2+Math.random()*4}px rgba(62,122,63,${0.3+Math.random()*0.3})`;
     }, 120);
   </script>
 </body>
